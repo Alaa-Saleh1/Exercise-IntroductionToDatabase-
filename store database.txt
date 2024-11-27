@@ -1,0 +1,76 @@
+create database store;
+
+create table countries (
+    code int primary key ,
+    name varchar(20) unique ,
+    continent_name varchar(20) not null
+);
+
+create table users (
+    id int primary key ,
+    full_name varchar(20) ,
+    email varchar(20) unique ,
+    gender char(1) check ( gender='m' or gender='f' ),
+    date_of_birth varchar(15) ,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    country_code int ,
+    foreign key (country_code) references countries(code)
+);
+
+create table orders (
+    id int primary key ,
+    status varchar(6) check ( status='start' or status='finish' ),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id int ,
+    foreign key (user_id) references users(id)
+);
+
+create table products (
+    id int primary key ,
+    name varchar(10) not null ,
+    price int default 0,
+    status varchar(10) check ( status='valid' or status='expired' ),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+create table order_products (
+    order_id int ,
+    product_id int ,
+    quantity int default 0 ,
+    foreign key (order_id) references orders(id),
+    foreign key (product_id) references products(id)
+);
+
+insert into countries values (1,'Saudi Arabia','Asia');
+insert into countries values (2,'Kuwait','Asia');
+
+select * from countries;
+
+insert into users values (7,'Alaa Saleh','alaa@gmail.com','f','1/1/2001',now(),1);
+insert into users values (8,'Saleh Ahmad','saleh@gmail.com','m','1/1/2001',now(),2);
+
+select * from users;
+
+insert into orders values (3,'start',now(),7);
+insert into orders values (4,'finish',now(),8);
+
+select * from orders;
+
+insert into products values (5,'laptop',4500,'valid',now());
+insert into products values (6,'phone',6500,'expired',now());
+
+select * from products;
+
+insert into order_products values (3,5,3);
+insert into order_products values (4,6,5);
+
+select * from order_products;
+
+update countries set name = 'Dubai' where code=2;
+
+delete from order_products where product_id=6;
+delete from products where id=6;
+
+
+
+
